@@ -1,0 +1,11 @@
+{
+    "name": "quiz-platform/backend",
+    "require": {
+        "vlucas/phpdotenv": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "./"
+        }
+    }
+}

@@ -1,0 +1,89 @@
+.app-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.quiz-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.quiz-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.quiz-header {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+}
+
+.question-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.option-btn {
+  transition: all 0.3s ease;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.option-btn:hover {
+  border-color: #667eea;
+  background-color: #f8f9fa;
+}
+
+.option-btn.selected {
+  border-color: #667eea;
+  background-color: #667eea;
+  color: white;
+}
+
+.option-btn.correct {
+  border-color: #28a745;
+  background-color: #28a745;
+  color: white;
+}
+
+.option-btn.incorrect {
+  border-color: #dc3545;
+  background-color: #dc3545;
+  color: white;
+}
+
+.timer {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #dc3545;
+}
+
+.analytics-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.hero-section {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+  color: white;
+  border-radius: 20px;
+  padding: 3rem;
+  margin: 2rem 0;
+}
+
+.btn-gradient {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  border: none;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  color: white;
+}
