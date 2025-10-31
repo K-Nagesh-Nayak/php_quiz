@@ -205,4 +205,4 @@ SELECT
 FROM quizzes q
 LEFT JOIN results r ON q.id = r.quiz_id
 GROUP BY q.id, q.title, q.topic, q.status, q.difficulty
-ORDER BY total_attempts DESC;
+ORDER BY total_attempts DESC;`

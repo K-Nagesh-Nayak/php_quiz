@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { adminService } from '../../services/adminService'
 import LoadingSpinner from '../common/LoadingSpinner'
+import '../../assets/performance.css'
 
 const UserActivity = ({ user, onBack }) => {
   const [userData, setUserData] = useState(null)
@@ -36,7 +37,7 @@ const UserActivity = ({ user, onBack }) => {
     if (!seconds) return '0m'
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    
+
     if (hours > 0) {
       return `${hours}h ${minutes}m`
     }
@@ -63,229 +64,232 @@ const UserActivity = ({ user, onBack }) => {
 
   const { user: userInfo, stats, attempts, topics } = userData
 
-  return (
-    <div className="row">
-      <div className="col-12">
-        {/* Header with Back Button */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <div>
-            <button 
-              className="btn btn-outline-secondary btn-sm me-3"
-              onClick={onBack}
-            >
-              <i className="fas fa-arrow-left me-1"></i>
-              Back to Users
-            </button>
-            <h4 className="mb-0">
-              <i className="fas fa-chart-line me-2 text-primary"></i>
-              User Activity: {userInfo.name}
-            </h4>
-            <small className="text-muted">{userInfo.email}</small>
+ return (
+  <div className="container-fluid py-3">
+    {/* Header */}
+    <div className="user-header-card">
+      <div className="header-content">
+        <button className="back-btn" onClick={onBack}>
+          <i className="fas fa-arrow-left"></i>
+          Back
+        </button>
+        
+        <div className="user-info">
+          <div className="user-avatar">
+            <i className="fas fa-user"></i>
           </div>
-          <div className="text-end">
-            <div className="badge bg-primary">
-              Joined: {formatDate(userInfo.created_at)}
-            </div>
+          <div className="user-details">
+            <h2 className="user-name">{userInfo.name}</h2>
+            <p className="user-email">{userInfo.email}</p>
           </div>
         </div>
+      </div>
 
-        {/* User Statistics */}
-        <div className="row mb-4">
-          <div className="col-md-3">
-            <div className="card bg-primary text-white">
-              <div className="card-body text-center">
-                <h3>{stats.total_attempts}</h3>
-                <p className="mb-0">Total Attempts</p>
-                <small>{stats.unique_quizzes} unique quizzes</small>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card bg-success text-white">
-              <div className="card-body text-center">
-                <h3>{stats.avg_score}%</h3>
-                <p className="mb-0">Average Score</p>
-                <small>Best: {stats.best_score}%</small>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card bg-info text-white">
-              <div className="card-body text-center">
-                <h3>{formatTime(stats.total_time)}</h3>
-                <p className="mb-0">Total Time</p>
-                <small>Learning duration</small>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card bg-warning text-white">
-              <div className="card-body text-center">
-                <h3>
-                  {stats.first_activity ? formatDate(stats.first_activity) : 'Never'}
-                </h3>
-                <p className="mb-0">First Activity</p>
-                <small>Last: {stats.last_activity ? formatDate(stats.last_activity) : 'Never'}</small>
-              </div>
-            </div>
-          </div>
+      <div className="header-meta">
+        <span className="join-date">
+          <i className="far fa-calendar-alt"></i>
+          Joined: {formatDate(userInfo.created_at)}
+        </span>
+      </div>
+    </div>
+
+    {/* Stats Overview */}
+    <div className="stats-grid">
+      <div className="stat-card attempts">
+        <div className="stat-icon">
+          <i className="fas fa-list-check"></i>
         </div>
+        <div className="stat-content">
+          <h3>{stats.total_attempts}</h3>
+          <p>Total Attempts</p>
+          <span className="stat-sub">{stats.unique_quizzes} unique quizzes</span>
+        </div>
+      </div>
 
-        <div className="row">
-          {/* Recent Activity */}
-          <div className="col-md-8">
-            <div className="card">
-              <div className="card-header">
-                <h5 className="mb-0">
-                  <i className="fas fa-history me-2"></i>
-                  Recent Quiz Attempts
-                </h5>
-              </div>
-              <div className="card-body">
-                {attempts.length === 0 ? (
-                  <div className="text-center py-4">
-                    <i className="fas fa-question-circle fa-3x text-muted mb-3"></i>
-                    <h5 className="text-muted">No quiz attempts yet</h5>
-                    <p className="text-muted">This user hasn't taken any quizzes.</p>
-                  </div>
-                ) : (
-                  <div className="table-responsive">
-                    <table className="table table-sm">
-                      <thead>
-                        <tr>
-                          <th>Quiz</th>
-                          <th>Topic</th>
-                          <th>Score</th>
-                          <th>Time</th>
-                          <th>Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {attempts.map(attempt => (
-                          <tr key={attempt.id}>
-                            <td>
-                              <strong>{attempt.quiz_title}</strong>
-                            </td>
-                            <td>
-                              <span className="badge bg-secondary">{attempt.topic}</span>
-                            </td>
-                            <td>
-                              <span className={getScoreColor(attempt.percentage)}>
-                                {attempt.percentage}%
-                              </span>
-                              <br />
-                              <small className="text-muted">
-                                {attempt.score}/{attempt.total_questions}
-                              </small>
-                            </td>
-                            <td>
-                              {formatTime(attempt.time_taken)}
-                            </td>
-                            <td>
-                              {formatDate(attempt.created_at)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </div>
+      <div className="stat-card score">
+        <div className="stat-icon">
+          <i className="fas fa-bullseye"></i>
+        </div>
+        <div className="stat-content">
+          <h3>{stats.avg_score}%</h3>
+          <p>Average Score</p>
+          <span className="stat-sub">Best: {stats.best_score}%</span>
+        </div>
+        <div className="score-progress">
+          <div className="progress-bar" style={{width: `${stats.avg_score}%`}}></div>
+        </div>
+      </div>
+
+      <div className="stat-card time">
+        <div className="stat-icon">
+          <i className="fas fa-clock"></i>
+        </div>
+        <div className="stat-content">
+          <h3>{formatTime(stats.total_time)}</h3>
+          <p>Learning Time</p>
+          <span className="stat-sub">Total duration</span>
+        </div>
+      </div>
+
+      <div className="stat-card activity">
+        <div className="stat-icon">
+          <i className="fas fa-calendar-alt"></i>
+        </div>
+        <div className="stat-content">
+          <h3>{stats.first_activity ? formatDate(stats.first_activity, true) : 'Never'}</h3>
+          <p>First Activity</p>
+          <span className="stat-sub">Last: {stats.last_activity ? formatDate(stats.last_activity, true) : 'Never'}</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Main Content */}
+    <div className="content-grid">
+      {/* Recent Attempts */}
+      <div className="content-card main-content p-2">
+        <div className="card-header">
+          <div className="header-title mx-2">
+            <i className="fas fa-history"></i>
+            Recent Quiz Attempts
           </div>
-
-          {/* Topic Performance */}
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <h5 className="mb-0">
-                  <i className="fas fa-tags me-2"></i>
-                  Topic Performance
-                </h5>
-              </div>
-              <div className="card-body">
-                {topics.length === 0 ? (
-                  <p className="text-muted">No topic data available.</p>
-                ) : (
-                  <div className="list-group list-group-flush">
-                    {topics.map((topic, index) => (
-                      <div key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                          <strong>{topic.topic}</strong>
-                          <br />
-                          <small className="text-muted">
-                            {topic.attempts} attempt{topic.attempts !== 1 ? 's' : ''}
-                          </small>
-                        </div>
-                        <span className={getScoreColor(topic.avg_score)}>
-                          {topic.avg_score}%
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+          <span className="attempts-count mx-2">{attempts.length} attempts</span>
+        </div>
+        
+        <div className="card-body">
+          {attempts.length === 0 ? (
+            <div className="empty-state">
+              <i className="fas fa-question-circle"></i>
+              <h4>No quiz attempts yet</h4>
+              <p>This user hasn't taken any quizzes.</p>
             </div>
-
-            {/* Performance Summary */}
-            <div className="card mt-4">
-              <div className="card-header">
-                <h5 className="mb-0">
-                  <i className="fas fa-chart-pie me-2"></i>
-                  Performance Summary
-                </h5>
-              </div>
-              <div className="card-body">
-                <div className="mb-3">
-                  <strong>Accuracy Rate:</strong>
-                  <div className="progress mt-1" style={{ height: '20px' }}>
-                    <div 
-                      className="progress-bar bg-success" 
-                      style={{ width: `${stats.avg_score}%` }}
-                    >
-                      {stats.avg_score}%
+          ) : (
+            <div className="attempts-list">
+              {attempts.map(a => (
+                <div key={a.id} className="attempt-item">
+                  <div className="attempt-main">
+                    <h4 className="quiz-title">{a.quiz_title}</h4>
+                    <div className="attempt-meta">
+                      <span className="topic-badge">{a.topic}</span>
+                      <span className="date">{formatDate(a.created_at)}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="attempt-stats">
+                    <div className="score-display">
+                      <span className={`score ${getScoreColor(a.percentage)}`}>
+                        {a.percentage}%
+                      </span>
+                      <small>{a.score}/{a.total_questions}</small>
+                    </div>
+                    <div className="time-display">
+                      <i className="fas fa-clock"></i>
+                      {formatTime(a.time_taken)}
                     </div>
                   </div>
                 </div>
-                
-                <div className="mb-3">
-                  <strong>Activity Level:</strong>
-                  <div className="mt-1">
-                    {stats.total_attempts === 0 ? (
-                      <span className="badge bg-secondary">New User</span>
-                    ) : stats.total_attempts < 5 ? (
-                      <span className="badge bg-info">Casual Learner</span>
-                    ) : stats.total_attempts < 15 ? (
-                      <span className="badge bg-primary">Active Learner</span>
-                    ) : (
-                      <span className="badge bg-success">Dedicated Learner</span>
-                    )}
-                  </div>
-                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
-                <div>
-                  <strong>Performance Tier:</strong>
-                  <div className="mt-1">
-                    {stats.avg_score >= 90 ? (
-                      <span className="badge bg-success">Expert</span>
-                    ) : stats.avg_score >= 75 ? (
-                      <span className="badge bg-primary">Advanced</span>
-                    ) : stats.avg_score >= 60 ? (
-                      <span className="badge bg-warning">Intermediate</span>
-                    ) : stats.avg_score > 0 ? (
-                      <span className="badge bg-info">Beginner</span>
-                    ) : (
-                      <span className="badge bg-secondary">Not Rated</span>
-                    )}
+      {/* Sidebar */}
+      <div className="sidebar">
+        {/* Topic Performance */}
+        <div className="content-card p-2">
+          <div className="card-header">
+            <div className="header-title">
+              <i className="fas fa-tags"></i>
+              Topic Performance
+            </div>
+          </div>
+          
+          <div className="card-body">
+            {topics.length === 0 ? (
+              <p className="no-data">No topic data available.</p>
+            ) : (
+              <div className="topics-list">
+                {topics.map((t, i) => (
+                  <div key={i} className="topic-item">
+                    <div className="topic-info">
+                      <span className="topic-name">{t.topic}</span>
+                      <span className="attempt-count">{t.attempts} attempt{t.attempts !== 1 ? 's' : ''}</span>
+                    </div>
+                    <span className={`topic-score ${getScoreColor(t.avg_score)}`}>
+                      {t.avg_score}%
+                    </span>
                   </div>
-                </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Performance Summary */}
+        <div className="content-card p-2">
+          <div className="card-header">
+            <div className="header-title">
+              <i className="fas fa-chart-pie"></i>
+              Performance Summary
+            </div>
+          </div>
+          
+          <div className="card-body">
+            <div className="summary-item">
+              <div className="summary-header">
+                <span>Accuracy Rate</span>
+                <strong>{stats.avg_score}%</strong>
+              </div>
+              <div className="progress-container">
+                <div 
+                  className="progress-fill" 
+                  style={{width: `${stats.avg_score}%`}}
+                ></div>
+              </div>
+            </div>
+
+            <div className="summary-item">
+              <div className="summary-header">
+                <span>Activity Level</span>
+              </div>
+              <div className="level-badge">
+                {stats.total_attempts === 0 ? (
+                  <span className="badge new">New User</span>
+                ) : stats.total_attempts < 5 ? (
+                  <span className="badge casual">Casual Learner</span>
+                ) : stats.total_attempts < 15 ? (
+                  <span className="badge active">Active Learner</span>
+                ) : (
+                  <span className="badge dedicated">Dedicated Learner</span>
+                )}
+              </div>
+            </div>
+
+            <div className="summary-item">
+              <div className="summary-header">
+                <span>Performance Tier</span>
+              </div>
+              <div className="level-badge">
+                {stats.avg_score >= 90 ? (
+                  <span className="badge expert">Expert</span>
+                ) : stats.avg_score >= 75 ? (
+                  <span className="badge advanced">Advanced</span>
+                ) : stats.avg_score >= 60 ? (
+                  <span className="badge intermediate">Intermediate</span>
+                ) : stats.avg_score > 0 ? (
+                  <span className="badge beginner">Beginner</span>
+                ) : (
+                  <span className="badge not-rated">Not Rated</span>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  </div>
+);
+
 }
 
 export default UserActivity

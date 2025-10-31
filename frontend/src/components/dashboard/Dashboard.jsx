@@ -4,6 +4,8 @@ import { useAuth } from '../../contexts/AuthContext'
 import { quizService } from '../../services/quizService'
 import { analyticsService } from '../../services/analyticsService'
 import LoadingSpinner from '../common/LoadingSpinner'
+import '../../assets/dashboard.css'
+
 
 const Dashboard = () => {
     const [stats, setStats] = useState({
@@ -73,211 +75,241 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="container mt-4">
+        <div className="dashboard-container">
             {/* Hero Section */}
-            <div className="hero-section text-center">
-                <h1 className="display-4 fw-bold mb-3">
-                    Welcome back, {user?.name}! 👋
-                </h1>
-                <p className="lead mb-4">
-                    Ready to challenge yourself with some intelligent quizzes?
-                </p>
-                <div className="row g-3 justify-content-center">
-                    <div className="col-auto">
-                        <Link to="/quizzes" className="btn btn-light btn-lg">
-                            <i className="fas fa-play me-2"></i>
+            <div className="hero-section">
+                <div className="hero-content">
+                    <div className="hero-badge">
+                        <i className="fas fa-sparkle"></i>
+                        Welcome back
+                    </div>
+                    <h1 className="hero-title">{user?.name}! 👋</h1>
+                    <p className="hero-subtitle">Ready to challenge yourself with some intelligent quizzes?</p>
+                    <div className="hero-actions">
+                        <Link to="/quizzes" className="btn btn-primary">
+                            <i className="fas fa-play"></i>
                             Take a Quiz
                         </Link>
-                    </div>
-                    <div className="col-auto">
-                        <Link to="/generate-quiz" className="btn btn-outline-light btn-lg">
-                            <i className="fas fa-robot me-2"></i>
+                        <Link to="/generate-quiz" className="btn btn-secondary">
+                            <i className="fas fa-robot"></i>
                             Generate AI Quiz
                         </Link>
                     </div>
                 </div>
+                <div className="hero-graphic">
+                    <div className="graphic-element"></div>
+                </div>
             </div>
 
             {/* Quick Stats */}
-            <div className="row g-4 mb-5">
-                <div className="col-md-3">
-                    <div className="analytics-card p-4 text-center">
-                        <div className="text-primary mb-2">
-                            <i className="fas fa-trophy fa-3x"></i>
+            <div className="stats-section">
+                <div className="stats-grid">
+                    <div className="stat-card">
+                        <div className="stat-icon trophy">
+                            <i className="fas fa-trophy"></i>
                         </div>
-                        <h3 className="text-primary">{stats.total_quizzes_taken}</h3>
-                        <p className="text-muted mb-0">Quizzes Taken</p>
-                        <small className="text-muted">{stats.total_attempts} attempts</small>
+                        <div className="stat-content">
+                            <h3>{stats.total_quizzes_taken}</h3>
+                            <p>Quizzes Taken</p>
+                            <span className="stat-sub">{stats.total_attempts} attempts</span>
+                        </div>
+                        <div className="stat-graph">
+                            <div className="graph-bar" style={{ height: '70%' }}></div>
+                        </div>
                     </div>
-                </div>
-                <div className="col-md-3">
-                    <div className="analytics-card p-4 text-center">
-                        <div className="text-success mb-2">
-                            <i className="fas fa-chart-line fa-3x"></i>
+
+                    <div className="stat-card">
+                        <div className="stat-icon score">
+                            <i className="fas fa-chart-line"></i>
                         </div>
-                        <h3 className="text-success">{stats.average_score}%</h3>
-                        <p className="text-muted mb-0">Average Score</p>
+                        <div className="stat-content">
+                            <h3>{stats.average_score}%</h3>
+                            <p>Average Score</p>
+                            <div className="progress-ring">
+                                <div className="ring-bg"></div>
+                                <div
+                                    className="ring-progress"
+                                    style={{ transform: `rotate(${stats.average_score * 3.6}deg)` }}
+                                ></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className="col-md-3">
-                    <div className="analytics-card p-4 text-center">
-                        <div className="text-info mb-2">
-                            <i className="fas fa-clock fa-3x"></i>
+
+                    <div className="stat-card">
+                        <div className="stat-icon time">
+                            <i className="fas fa-clock"></i>
                         </div>
-                        <h3 className="text-info">
-                            {formatTime(stats.total_time_spent)}
-                        </h3>
-                        <p className="text-muted mb-0">Time Learning</p>
+                        <div className="stat-content">
+                            <h3>{formatTime(stats.total_time_spent)}</h3>
+                            <p>Time Learning</p>
+                            <span className="stat-sub">Total invested</span>
+                        </div>
+                        <div className="time-graph">
+                            <div className="time-bar"></div>
+                            <div className="time-bar"></div>
+                            <div className="time-bar"></div>
+                        </div>
                     </div>
-                </div>
-                <div className="col-md-3">
-                    <div className="analytics-card p-4 text-center">
-                        <div className="text-warning mb-2">
-                            <i className="fas fa-star fa-3x"></i>
+
+                    <div className="stat-card">
+                        <div className="stat-icon best">
+                            <i className="fas fa-star"></i>
                         </div>
-                        <h3 className="text-warning">{stats.best_score}%</h3>
-                        <p className="text-muted mb-0">Best Score</p>
+                        <div className="stat-content">
+                            <h3>{stats.best_score}%</h3>
+                            <p>Best Score</p>
+                            <span className="stat-sub">Personal record</span>
+                        </div>
+                        <div className="achievement-badge">
+                            <i className="fas fa-crown"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
-
-            {/* User's AI Quizzes Section */}
+            {/* User's AI Quizzes */}
             {userQuizzes.length > 0 && (
-                <div className="row mt-4">
-                    <div className="col-12">
-                        <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h3>
-                                <i className="fas fa-robot me-2 text-info"></i>
-                                Your AI Generated Quizzes
-                            </h3>
-                            <Link to="/generate-quiz" className="btn btn-info">
-                                <i className="fas fa-plus me-1"></i>
-                                Generate New
-                            </Link>
+                <div className="section">
+                    <div className="section-header d-flex justify-content-between align-items-center">
+                        <div className="section-title">
+                            <div className="title-icon ai">
+                                <i className="fas fa-robot"></i>
+                            </div>
+                            <div>
+                                <h2>Your AI Quizzes</h2>
+                                <p>Quizzes generated by AI</p>
+                            </div>
                         </div>
-                        <div className="row g-4">
-                            {userQuizzes.map(quiz => (
-                                <div key={quiz.id} className="col-md-6 col-lg-4">
-                                    <div className="quiz-card card h-100">
-                                        <div className={`card-header text-white ${quiz.status === 'published' ? 'bg-success' :
-                                                quiz.status === 'pending' ? 'bg-warning' : 'bg-danger'
-                                            }`}>
-                                            <h5 className="card-title mb-1">{quiz.title}</h5>
-                                            <small>
-                                                {getStatusBadge(quiz.status)} • By {quiz.creator_name || 'You'}
-                                            </small>
+                        <Link to="/generate-quiz" className="btn-generate">
+                            <i className="fas fa-plus"></i>
+                            Generate New
+                        </Link>
+                    </div>
+
+                    <div className="quizzes-grid">
+                        {userQuizzes.map((quiz) => (
+                            <div key={quiz.id} className={`quiz-card ${quiz.status}`}>
+                                <div className="quiz-header">
+                                    <div className="quiz-status">
+                                        <span className={`status-badge ${quiz.status}`}>
+                                            {quiz.status === 'published' ? 'Live' : quiz.status === 'pending' ? 'Pending' : 'Rejected'}
+                                        </span>
+                                    </div>
+                                    <h3 className="quiz-title">{quiz.title}</h3>
+                                    <p className="quiz-creator">By {quiz.creator_name || "You"}</p>
+                                </div>
+
+                                <div className="quiz-body">
+                                    <div className="quiz-meta">
+                                        <div className="meta-item">
+                                            <i className="fas fa-tag"></i>
+                                            {quiz.topic}
                                         </div>
-                                        <div className="card-body">
-                                            <p className="card-text">
-                                                <strong>Topic:</strong> {quiz.topic}
-                                            </p>
-                                            <p className="card-text">
-                                                <strong>Difficulty:</strong>
-                                                <span className={`badge ms-1 ${quiz.difficulty === 'easy' ? 'bg-success' :
-                                                        quiz.difficulty === 'medium' ? 'bg-warning' : 'bg-danger'
-                                                    }`}>
-                                                    {quiz.difficulty}
-                                                </span>
-                                            </p>
-                                            <div className="mt-3">
-                                                <small className="text-muted">
-                                                    <i className="fas fa-calendar me-1"></i>
-                                                    Created: {new Date(quiz.created_at).toLocaleDateString()}
-                                                </small>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer bg-transparent">
-                                            {quiz.status === 'published' ? (
-                                                <Link
-                                                    to={`/quiz/${quiz.id}`}
-                                                    className="btn btn-success w-100"
-                                                >
-                                                    <i className="fas fa-play me-1"></i>
-                                                    Take Quiz
-                                                </Link>
-                                            ) : (
-                                                <div className="text-center">
-                                                    <button className="btn btn-outline-secondary w-100" disabled>
-                                                        <i className="fas fa-clock me-1"></i>
-                                                        {quiz.status === 'pending' ? 'Awaiting Approval' : 'Rejected'}
-                                                    </button>
-                                                    {quiz.status === 'pending' && (
-                                                        <small className="text-muted mt-1 d-block">
-                                                            Waiting for admin approval
-                                                        </small>
-                                                    )}
-                                                </div>
-                                            )}
+                                        <div className="meta-item">
+                                            <i className="fas fa-signal"></i>
+                                            <span className={`difficulty ${quiz.difficulty}`}>
+                                                {quiz.difficulty}
+                                            </span>
                                         </div>
                                     </div>
+                                    <div className="quiz-date">
+                                        <i className="fas fa-calendar"></i>
+                                        Created {new Date(quiz.created_at).toLocaleDateString()}
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
+
+                                <div className="quiz-footer">
+                                    {quiz.status === "published" ? (
+                                        <Link to={`/quiz/${quiz.id}`} className="btn-take-quiz">
+                                            <i className="fas fa-play"></i>
+                                            Take Quiz
+                                        </Link>
+                                    ) : (
+                                        <div className="quiz-pending">
+                                            <div className="pending-state">
+                                                <i className="fas fa-clock"></i>
+                                                {quiz.status === "pending" ? "Awaiting Approval" : "Rejected"}
+                                            </div>
+                                            {quiz.status === "pending" && (
+                                                <small>Waiting for admin approval</small>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
 
-            {/* Public Quizzes Section */}
-            <div className="row mt-5">
-                <div className="col-12">
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h3>
-                            <i className="fas fa-globe me-2 text-primary"></i>
-                            Public Quizzes
-                        </h3>
-                        <Link to="/quizzes" className="btn btn-outline-primary">
-                            View All
-                        </Link>
-                    </div>
-
-                    {publicQuizzes.length === 0 ? (
-                        <div className="text-center py-5">
-                            <i className="fas fa-question-circle fa-4x text-muted mb-3"></i>
-                            <h4 className="text-muted">No public quizzes available</h4>
-                            <p className="text-muted">Check back later for new quizzes</p>
+            {/* Public Quizzes */}
+            <div className="section">
+                <div className="section-header d-flex justify-content-between align-items-center">
+                    <div className="section-title">
+                        <div className="title-icon public">
+                            <i className="fas fa-globe"></i>
                         </div>
-                    ) : (
-                        <div className="row g-4">
-                            {publicQuizzes.slice(0, 3).map(quiz => (
-                                <div key={quiz.id} className="col-md-4">
-                                    <div className="quiz-card card h-100">
-                                        <div className="quiz-header card-header text-white">
-                                            <h5 className="card-title mb-0">{quiz.title}</h5>
-                                            <small>By {quiz.creator_name}</small>
+                        <div>
+                            <h2>Public Quizzes</h2>
+                            <p>Explore community quizzes</p>
+                        </div>
+                    </div>
+                    <Link to="/quizzes" className="btn-view-all">
+                        View All
+                        <i className="fas fa-arrow-right"></i>
+                    </Link>
+                </div>
+
+                {publicQuizzes.length === 0 ? (
+                    <div className="empty-state">
+                        <div className="empty-icon">
+                            <i className="fas fa-question-circle"></i>
+                        </div>
+                        <h3>No public quizzes available</h3>
+                        <p>Check back later for new quizzes</p>
+                    </div>
+                ) : (
+                    <div className="quizzes-grid public">
+                        {publicQuizzes.slice(0, 6).map((quiz) => (
+                            <div key={quiz.id} className="quiz-card public">
+                                <div className="quiz-badge">
+                                    <i className={`fas ${quiz.source === "AI" ? "fa-robot" : "fa-edit"}`}></i>
+                                    {quiz.source}
+                                </div>
+                                <div className="quiz-header">
+                                    <h3 className="quiz-title">{quiz.title}</h3>
+                                    <p className="quiz-creator">By {quiz.creator_name}</p>
+                                </div>
+
+                                <div className="quiz-body">
+                                    <div className="quiz-meta">
+                                        <div className="meta-item">
+                                            <i className="fas fa-tag"></i>
+                                            {quiz.topic}
                                         </div>
-                                        <div className="card-body">
-                                            <p className="card-text">{quiz.topic}</p>
-                                            <div className="d-flex justify-content-between align-items-center">
-                                                <span className={`badge ${quiz.difficulty === 'easy' ? 'bg-success' :
-                                                        quiz.difficulty === 'medium' ? 'bg-warning' : 'bg-danger'
-                                                    }`}>
-                                                    {quiz.difficulty}
-                                                </span>
-                                                <span className="badge bg-light text-dark">
-                                                    <i className={`fas ${quiz.source === 'AI' ? 'fa-robot' : 'fa-edit'} me-1`}></i>
-                                                    {quiz.source}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer bg-transparent">
-                                            <Link
-                                                to={`/quiz/${quiz.id}`}
-                                                className="btn btn-primary w-100"
-                                            >
-                                                <i className="fas fa-play me-1"></i>
-                                                Take Quiz
-                                            </Link>
+                                        <div className="meta-item">
+                                            <i className="fas fa-signal"></i>
+                                            <span className={`difficulty ${quiz.difficulty}`}>
+                                                {quiz.difficulty}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+
+                                <div className="quiz-footer">
+                                    <Link to={`/quiz/${quiz.id}`} className="btn-take-quiz primary">
+                                        <i className="fas fa-play"></i>
+                                        Take Quiz
+                                    </Link>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
-    )
+    );
+
 }
 
 export default Dashboard

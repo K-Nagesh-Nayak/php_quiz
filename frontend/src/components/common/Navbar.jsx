@@ -2,6 +2,8 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 
+import '../../assets/navbar.css'
+
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
@@ -12,110 +14,126 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container">
-        <Link className="navbar-brand fw-bold" to="/">
-          <i className="fas fa-brain me-2"></i>
-          Intelligent Quiz Platform
-        </Link>
-        
-        <button 
-          className="navbar-toggler" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarNav"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto">
-            {isAuthenticated && (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/dashboard">
-                    <i className="fas fa-home me-1"></i>
-                    Dashboard
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/quizzes">
-                    <i className="fas fa-question-circle me-1"></i>
-                    Quizzes
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/generate-quiz">
-                    <i className="fas fa-robot me-1"></i>
-                    AI Generator
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/analytics">
-                    <i className="fas fa-chart-bar me-1"></i>
-                    Analytics
-                  </Link>
-                </li>
-                {user?.role === 'admin' && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/admin">
-                      <i className="fas fa-cog me-1"></i>
-                      Admin
-                    </Link>
-                  </li>
-                )}
-              </>
-            )}
-          </ul>
-          
-          <ul className="navbar-nav">
-            {isAuthenticated ? (
-              <li className="nav-item dropdown">
-                <a 
-                  className="nav-link dropdown-toggle" 
-                  href="#" 
-                  role="button" 
-                  data-bs-toggle="dropdown"
-                >
-                  <i className="fas fa-user me-1"></i>
-                  {user?.name}
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <span className="dropdown-item-text">
-                      <small>Signed in as</small><br />
-                      <strong>{user?.email}</strong>
-                    </span>
-                  </li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li>
-                    <button className="dropdown-item" onClick={handleLogout}>
-                      <i className="fas fa-sign-out-alt me-1"></i>
-                      Logout
-                    </button>
-                  </li>
-                </ul>
-              </li>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    <i className="fas fa-sign-in-alt me-1"></i>
-                    Login
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register">
-                    <i className="fas fa-user-plus me-1"></i>
-                    Register
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
+   <nav className="navbar navbar-expand-lg navbar-custom">
+  <div className="container">
+    {/* Brand */}
+    <Link className="navbar-brand" to="/">
+      <div className="brand-content">
+        <i className="fas fa-brain brand-icon"></i>
+        <span className="brand-text">QuizMaster</span>
       </div>
-    </nav>
+    </Link>
+    
+    {/* Mobile Toggle */}
+    <button 
+      className="navbar-toggler" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="#navbarNav"
+    >
+      <span className="navbar-toggler-icon">
+        <i className="fas fa-bars"></i>
+      </span>
+    </button>
+    
+    {/* Navigation */}
+    <div className="collapse navbar-collapse" id="navbarNav">
+      {/* Left Navigation */}
+      <ul className="navbar-nav me-auto">
+        {isAuthenticated && (
+          <>
+            <li className="nav-item">
+              <Link className="nav-link nav-item-custom" to="/dashboard">
+                <i className="fas fa-home nav-icon"></i>
+                <span>Dashboard</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link nav-item-custom" to="/quizzes">
+                <i className="fas fa-question-circle nav-icon"></i>
+                <span>Quizzes</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link nav-item-custom" to="/generate-quiz">
+                <i className="fas fa-robot nav-icon"></i>
+                <span>AI Generator</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link nav-item-custom" to="/analytics">
+                <i className="fas fa-chart-bar nav-icon"></i>
+                <span>Analytics</span>
+              </Link>
+            </li>
+            {user?.role === 'admin' && (
+              <li className="nav-item">
+                <Link className="nav-link nav-item-custom admin-nav-item" to="/admin">
+                  <i className="fas fa-cog nav-icon"></i>
+                  <span>Admin</span>
+                </Link>
+              </li>
+            )}
+          </>
+        )}
+      </ul>
+      
+      {/* Right Navigation */}
+      <ul className="navbar-nav">
+        {isAuthenticated ? (
+          <li className="nav-item dropdown">
+            <a 
+              className="nav-link dropdown-toggle user-dropdown-toggle" 
+              href="#" 
+              role="button" 
+              data-bs-toggle="dropdown"
+            >
+              <div className="user-avatar-sm">
+                <i className="fas fa-user"></i>
+              </div>
+              <span className="user-name">{user?.name}</span>
+            </a>
+            <ul className="dropdown-menu dropdown-menu-custom">
+              <li>
+                <div className="dropdown-header-custom">
+                  <div className="user-avatar-md">
+                    <i className="fas fa-user"></i>
+                  </div>
+                  <div className="user-info d-flex flex-column align-items-start gap-0">
+                    <div className="user-name-lg">{user?.name}</div>
+                    <div className="user-email">{user?.email}</div>
+                  </div>
+                </div>
+              </li>
+              <li><hr className="dropdown-divider" /></li>
+              <li>
+                <button className="dropdown-item dropdown-item-custom" onClick={handleLogout}>
+                  <i className="fas fa-sign-out-alt"></i>
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </li>
+        ) : (
+          <>
+            <li className="nav-item">
+              <Link className="nav-link auth-link login-link" to="/login">
+                <i className="fas fa-sign-in-alt"></i>
+                Login
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link auth-link register-link" to="/register">
+                <i className="fas fa-user-plus"></i>
+                Register
+              </Link>
+            </li>
+          </>
+        )}
+      </ul>
+    </div>
+  </div>
+</nav>
   )
 }
 
