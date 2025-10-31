@@ -89,17 +89,17 @@ const UserManagement = ({ onViewUserActivity }) => {
   return (
   <div className="user-management-container">
   {/* Header */}
-  <div className="management-header">
+  <div className="management-header d-flex justify-content-between" >
     <div className="header-content">
       <div className="header-icon">
         <i className="fas fa-users"></i>
       </div>
       <div>
-        <h2>User Management</h2>
+        <h2>User Management </h2>
         <p>Manage and monitor user activities</p>
       </div>
     </div>
-    <div className="user-count">
+    <div className="user-count d-flex flex-column align-items-center justify-content-center">
       <span className="count-badge">{filteredUsers.length}</span>
       <span>users</span>
     </div>
